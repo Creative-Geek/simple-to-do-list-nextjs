@@ -124,3 +124,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes strikethrough {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.animate-strikethrough {
+  animation: strikethrough 0.3s ease-in-out forwards;
+}

@@ -37,6 +37,7 @@ type Todo = {
   text: string;
   completed: boolean;
   order?: number; // Optional order property for sorting
+  isAnimating?: boolean; // Flag to track animation state
 };
 
 // Sortable Todo Item component
@@ -61,7 +62,7 @@ function SortableTodoItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="group flex items-center justify-between p-2 border rounded-md"
+      className="group flex items-center justify-between p-2 border rounded-md transition-all duration-300 ease-in-out"
     >
       <div className="flex items-center space-x-2">
         <div
@@ -77,11 +78,21 @@ function SortableTodoItem({
           onCheckedChange={() => toggleTodo(todo.id)}
         />
         <span
-          className={`text-sm ${
-            todo.completed ? "line-through text-muted-foreground" : ""
+          className={`text-sm relative ${
+            todo.completed ? "text-muted-foreground" : ""
           }`}
         >
           {todo.text}
+          {todo.completed && (
+            <span
+              className="absolute left-0 top-1/2 w-0 h-0.5 bg-current animate-strikethrough"
+              style={{
+                width: "100%",
+                transition: "width 0.3s ease-in-out",
+                animation: "strikethrough 0.3s ease-in-out forwards",
+              }}
+            />
+          )}
         </span>
       </div>
       <Button
@@ -153,9 +164,20 @@ export default function TodoList() {
   const toggleTodo = (id: number) => {
     setTodos(
       todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        todo.id === id
+          ? { ...todo, completed: !todo.completed, isAnimating: true }
+          : todo
       )
     );
+
+    // After animation completes, reset the animation flag
+    setTimeout(() => {
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
+          todo.id === id ? { ...todo, isAnimating: false } : todo
+        )
+      );
+    }, 300); // Match animation duration
   };
 
   // Delete a todo
