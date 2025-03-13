@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 
 // Import dnd-kit components
 import {
@@ -61,24 +61,28 @@ function SortableTodoItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between p-2 border rounded-md cursor-move"
-      {...attributes}
-      {...listeners}
+      className="group flex items-center justify-between p-2 border rounded-md"
     >
       <div className="flex items-center space-x-2">
+        <div
+          className="touch-none flex items-center mr-2 opacity-40 md:opacity-0 md:group-hover:opacity-40 transition-opacity"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical size={16} className="cursor-grab" />
+        </div>
         <Checkbox
           id={`todo-${todo.id}`}
           checked={todo.completed}
           onCheckedChange={() => toggleTodo(todo.id)}
         />
-        <label
-          htmlFor={`todo-${todo.id}`}
+        <span
           className={`text-sm ${
             todo.completed ? "line-through text-muted-foreground" : ""
           }`}
         >
           {todo.text}
-        </label>
+        </span>
       </div>
       <Button
         variant="ghost"
